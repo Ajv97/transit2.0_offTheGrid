@@ -74,66 +74,6 @@
             </v-card>
           </v-card>
         </v-col>
-        <v-col>
-          <v-card-title>
-            Inactive Routes
-          </v-card-title>
-          <v-card class="primary lighten-2  pa-4 pb-2 mr-3"
-                  elevation="7"
-          >
-            <v-card-title class="py-2">
-              <v-row>
-                <v-col class="text-center pa-0"
-                       cols="3"
-                >
-                  Route Number
-                </v-col>
-                <v-col class="text-center pa-0"
-                       cols="5"
-                >
-                  Trip Number
-                </v-col>
-                <v-col class="text-center pa-0"
-                       cols="4"
-                >
-                  Bus #
-                </v-col>
-              </v-row>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card v-for="routes in routes"
-                    :key="routes.id"
-                    v-show="routes.bus_ID === 'No Bus'"
-                    class="primary my-2"
-                    elevation="5"
-            >
-              <v-card-title class="py-2">
-                <v-row>
-                  <v-col class="text-center pa-0"
-                         cols="3"
-                  >
-                    {{ routes.route_ID }}
-                  </v-col>
-                  <v-col class="text-center pa-0"
-                         cols="5"
-                  >
-                    {{ routes.trip_ID }}
-                  </v-col>
-                  <v-col class="text-center pa-0"
-                         cols="4"
-                  >
-                    <v-select
-                      v-model = "routes.bus_ID"
-                      :items="items"
-                      label="Bus #"
-                      outlined
-                    ></v-select>
-                  </v-col>
-                </v-row>
-              </v-card-title>
-            </v-card>
-          </v-card>
-        </v-col>
       </v-row>
     </v-card>
   </div>

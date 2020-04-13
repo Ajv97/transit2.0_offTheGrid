@@ -7,7 +7,7 @@
                 Dashboard
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
-                user
+                user <v-btn @click="logout"> Logout </v-btn>
             </v-card-title>
         </v-card>
         <v-row>
@@ -123,6 +123,11 @@
                     }
                 ]
             }
+        },
+        methods:{
+            logout() {
+                this.$store.commit('changeToken', "")
+            }
         }
-    };
+    }
 </script>
