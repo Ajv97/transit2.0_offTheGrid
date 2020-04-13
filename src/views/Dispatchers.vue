@@ -69,60 +69,54 @@
                                     <v-col class="text-center pa-0"
                                            cols="4"
                                     >
-                                        <v-dialog
-                                                v-model="dialog.on"
-                                                width="500"
+                                        <v-btn class="error"
+                                               elevation="3"
+                                               v-on="on"
+                                               @click="fillRemove(dispatch.name)"
                                         >
-                                            <template v-slot:activator="{on}">
-                                                <v-btn class="error"
-                                                       elevation="3"
-                                                       v-on="on"
-                                                       @click="fillRemove(dispatch.name)"
-                                                >
-                                                    Delete
-                                                </v-btn>
-                                            </template>
-
-                                            <v-card class="primary pa-4">
-                                                <v-card-title>
-                                                    Remove Dispatcher
-                                                </v-card-title>
-
-                                                <v-card-text>
-                                                    Are you sure you want to remove {{dispatch.name}} as a dispatcher?
-                                                </v-card-text>
-
-                                                <v-card-actions>
-                                                    <v-row>
-                                                        <v-col>
-                                                            <v-btn class="secondary"
-                                                                   text
-                                                                   block
-                                                                   @click="dialog.on = false"
-                                                            >
-                                                                I don't
-                                                            </v-btn>
-                                                        </v-col>
-                                                        <v-col>
-                                                            <v-btn class="error"
-                                                                   text
-                                                                   block
-                                                                   @click="function(){
-                                                                   remove(dispatch.email);
-                                                                   dialog.on = false;
-                                                               }"
-                                                            >
-                                                                I do
-                                                            </v-btn>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-card-actions>
-                                            </v-card>
-                                        </v-dialog>
+                                            Delete
+                                        </v-btn>
                                     </v-col>
                                 </v-row>
                             </v-card-title>
                         </v-card>
+                        <v-dialog
+                                v-model="dialog.remove.on"
+                                width="500"
+                        >
+                            <v-card class="primary pa-4">
+                                <v-card-title>
+                                    Remove Dispatcher
+                                </v-card-title>
+
+                                <v-card-text>
+                                    {{dialog.remove.text}}
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-row>
+                                        <v-col>
+                                            <v-btn class="secondary"
+                                                   text
+                                                   block
+                                                   @click="dialog.remove.on = false"
+                                            >
+                                                I don't
+                                            </v-btn>
+                                        </v-col>
+                                        <v-col>
+                                            <v-btn class="error"
+                                                   text
+                                                   block
+                                                   @click="dialog.remove.on = false"
+                                            >
+                                                I do
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-card>
                 </v-col>
                 <v-col>
@@ -196,7 +190,7 @@
                             <v-row class="mx-4 mt-4 mb-2">
                                 <v-col class="py-0">
                                     <v-dialog
-                                            v-model="dialog.on"
+                                            v-model="dialog.add.on"
                                             width="500"
                                     >
                                         <template v-slot:activator="{}">
@@ -210,11 +204,11 @@
 
                                         <v-card class="primary pa-4">
                                             <v-card-title>
-                                                {{dialog.title}}
+                                                Add Dispatcher
                                             </v-card-title>
 
                                             <v-card-text>
-                                                {{dialog.text}}
+                                                {{dialog.add.text}}
                                             </v-card-text>
 
                                             <v-card-actions>
@@ -223,7 +217,7 @@
                                                         <v-btn class="error"
                                                                text
                                                                block
-                                                               @click="dialog.on = false"
+                                                               @click="dialog.add.on = false"
                                                         >
                                                             I don't
                                                         </v-btn>
@@ -233,8 +227,8 @@
                                                                text
                                                                block
                                                                @click="function(){
-                                                                   submit();
-                                                                   dialog.on = false;
+                                                                   // submit();
+                                                                   dialog.add.on = false;
                                                                }"
                                                         >
                                                             I do
@@ -263,15 +257,20 @@
 </template>
 
 <script>
-    import {http} from "../components/httpComponent";
+    // import {http} from "../components/httpComponent";
 
     export default {
         name: "Dispatchers",
         data: () => ({
             dialog: {
-                title: '',
-                text: '',
-                on: false,
+                remove:{
+                    text: '',
+                    on: false,
+                },
+                add:{
+                    text: '',
+                    on: false,
+                }
             },
             snackbar: {
                 text: '',
@@ -324,57 +323,57 @@
             reset() {
                 this.$refs.form.reset()
             },
-            submit() {
-                http.post('users/registerdispatcher/', this.newDispatcher)
-                    .then(response => {
-                        if (response.status === 201) {
-                            this.snackbar.text = 'Dispatcher Successfully Created';
-                            this.snackbar.color = 'success';
-                            this.snackbar.on = true;
-                            this.newDispatcher.email = '';
-                            this.newDispatcher.password = '';
-                            this.newDispatcher.firstName = '';
-                            this.newDispatcher.lastName = '';
-                        } else {
-                            this.snackbar.text = 'Dispatcher Creation Failed';
-                            this.snackbar.color = 'error';
-                            this.snackbar.on = true;
-                        }
-                    })
-                    .catch(e => {
-                        // eslint-disable-next-line no-console
-                        console.log(e);
-                        this.snackbar.text = 'not connected';
-                        this.snackbar.color = 'secondary';
-                        this.snackbar.on = true;
-                    });
-            },
+            // submit() {
+            //     http.post('users/registerdispatcher/', this.newDispatcher)
+            //         .then(response => {
+            //             if (response.status === 201) {
+            //                 this.snackbar.text = 'Dispatcher Successfully Created';
+            //                 this.snackbar.color = 'success';
+            //                 this.snackbar.on = true;
+            //                 this.newDispatcher.email = '';
+            //                 this.newDispatcher.password = '';
+            //                 this.newDispatcher.firstName = '';
+            //                 this.newDispatcher.lastName = '';
+            //             } else {
+            //                 this.snackbar.text = 'Dispatcher Creation Failed';
+            //                 this.snackbar.color = 'error';
+            //                 this.snackbar.on = true;
+            //             }
+            //         })
+            //         .catch(e => {
+            //             // eslint-disable-next-line no-console
+            //             console.log(e);
+            //             this.snackbar.text = 'not connected';
+            //             this.snackbar.color = 'secondary';
+            //             this.snackbar.on = true;
+            //         });
+            // },
 
-            remove(email) {
-                http.delete('/admins/dispatcher/', email)
-                    .then(response => {
-                        if (response.status === 204) {
-                            this.snackbar.text = 'Dispatcher Successful Deleted';
-                            this.snackbar.color = 'success';
-                            this.snackbar.on = true;
-                        } else {
-                            this.snackbar.text = 'Dispatcher Deletion Failed';
-                            this.snackbar.color = 'error';
-                            this.snackbar.on = true;
-                        }
-                    })
-                    .catch(e => {
-                        // eslint-disable-next-line no-console
-                        console.log(e);
-                        this.snackbar.text = 'not connected';
-                        this.snackbar.color = 'secondary';
-                        this.snackbar.on = true;
-                    });
-            },
+            // remove(email) {
+            //     http.delete('/admins/dispatcher/', email)
+            //         .then(response => {
+            //             if (response.status === 204) {
+            //                 this.snackbar.text = 'Dispatcher Successful Deleted';
+            //                 this.snackbar.color = 'success';
+            //                 this.snackbar.on = true;
+            //             } else {
+            //                 this.snackbar.text = 'Dispatcher Deletion Failed';
+            //                 this.snackbar.color = 'error';
+            //                 this.snackbar.on = true;
+            //             }
+            //         })
+            //         .catch(e => {
+            //             // eslint-disable-next-line no-console
+            //             console.log(e);
+            //             this.snackbar.text = 'not connected';
+            //             this.snackbar.color = 'secondary';
+            //             this.snackbar.on = true;
+            //         });
+            // },
 
             fillRemove(firstName) {
-                this.dialog.title = 'Remove Dispatcher';
-                this.dialog.text = 'Are you sure you want to remove ' + firstName + ' as a dispatcher?';
+                this.dialog.remove.text = 'Are you sure you want to remove ' + firstName + ' as a dispatcher?';
+                this.dialog.remove.on = true
             },
 
             fillDispatch() {
@@ -383,9 +382,8 @@
                 const email = this.newDispatcher.email !== "";
                 const password = this.newDispatcher.password !== "";
                 if (lName && fName && email && password) {
-                    this.dialog.title = 'Add Dispatcher';
-                    this.dialog.text = 'Are you sure you want to add ' + this.newDispatcher.firstName + ' ' + this.newDispatcher.lastName + ' as a dispatcher?';
-                    this.dialog.on = true;
+                    this.dialog.add.text = 'Are you sure you want to add ' + this.newDispatcher.firstName + ' ' + this.newDispatcher.lastName + ' as a dispatcher?';
+                    this.dialog.add.on = true;
                 } else {
                     this.newDispatcher.inputs.lastName = !lName;
                     this.newDispatcher.inputs.firstName = !fName;

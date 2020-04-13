@@ -4,7 +4,7 @@
                 elevation="10"
         >
             <v-card-title class="d-inline-block">
-                Dispatchers
+                Admins
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
                 user
@@ -16,7 +16,7 @@
             <v-row>
                 <v-col>
                     <v-card-title>
-                        Dispatchers
+                        Admins
                     </v-card-title>
                     <v-card class="accent pa-4 pb-2 ml-3"
                             elevation="7"
@@ -41,8 +41,8 @@
                             </v-row>
                         </v-card-title>
                         <v-divider></v-divider>
-                        <v-card v-for="dispatch in dispatchers"
-                                :key="dispatch.id"
+                        <v-card v-for="admin in admins"
+                                :key="admin.id"
                                 class="primary my-2"
                                 elevation="5"
                         >
@@ -51,18 +51,19 @@
                                     <v-col class="text-center pa-0"
                                            cols="3"
                                     >
-                                        {{ dispatch.name }}
+                                        {{ admin.name }}
                                     </v-col>
                                     <v-col class="text-center pa-0"
                                            cols="5"
                                     >
-                                        {{ dispatch.email }}
+                                        {{ admin.email }}
                                     </v-col>
                                     <v-col class="text-center pa-0"
                                            cols="4"
                                     >
                                         <v-btn class="error"
                                                elevation="3"
+                                               @click="fillRemove(admin.name)"
                                         >
                                             Delete
                                         </v-btn>
@@ -70,48 +71,105 @@
                                 </v-row>
                             </v-card-title>
                         </v-card>
+                        <v-dialog
+                                v-model="dialog.remove.on"
+                                width="500"
+                        >
+                            <v-card class="primary pa-4">
+                                <v-card-title>
+                                    Remove Admin
+                                </v-card-title>
+
+                                <v-card-text>
+                                    {{dialog.remove.text}}
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-row>
+                                        <v-col>
+                                            <v-btn class="secondary"
+                                                   text
+                                                   block
+                                                   @click="dialog.remove.on = false"
+                                            >
+                                                I don't
+                                            </v-btn>
+                                        </v-col>
+                                        <v-col>
+                                            <v-btn class="error"
+                                                   text
+                                                   block
+                                                   @click="dialog.remove.on = false"
+                                            >
+                                                I do
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                     </v-card>
                 </v-col>
                 <v-col>
                     <v-card-title>
-                        Add Dispatchers
+                        Add Admins
                     </v-card-title>
                     <v-card class="accent pa-4 pb-2 mr-3"
                             elevation="7"
                     >
                         <v-card-title>
-                            New Dispatcher Details
+                            New Admin Details
                         </v-card-title>
                         <v-divider></v-divider>
                         <v-form ref="form">
                             <v-row class="mx-4 mt-4">
                                 <v-col class="py-0">
-                                    <v-text-field filled
+                                    <v-text-field v-model="newAdmin.firstName"
+                                                  required
+                                                  filled
                                                   outlined
                                                   dense
+                                                  hint="First Name is required"
+                                                  :persistent-hint="newAdmin.inputs.firstName"
+                                                  :error=newAdmin.inputs.firstName
                                                   label="First Name"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col class="py-0">
-                                    <v-text-field filled
+                                    <v-text-field v-model="newAdmin.lastName"
+                                                  required
+                                                  filled
                                                   outlined
                                                   dense
+                                                  hint="Last Name is required"
+                                                  :persistent-hint="newAdmin.inputs.lastName"
+                                                  :error=newAdmin.inputs.lastName
                                                   label="Last Name"
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
                             <v-row class="mx-4 mt-n2">
                                 <v-col class="py-0">
-                                    <v-text-field filled
+                                    <v-text-field v-model="newAdmin.email"
+                                                  required
+                                                  filled
                                                   outlined
                                                   dense
+                                                  hint="Email is required"
+                                                  :persistent-hint="newAdmin.inputs.email"
+                                                  :error=newAdmin.inputs.email
                                                   label="Email"
                                     ></v-text-field>
                                 </v-col>
                                 <v-col class="py-0">
-                                    <v-text-field filled
+                                    <v-text-field v-model="newAdmin.password"
+                                                  required
+                                                  filled
                                                   outlined
                                                   dense
+                                                  hint="Password is required"
+                                                  :persistent-hint="newAdmin.inputs.password"
+                                                  :error=newAdmin.inputs.password
                                                   label="Password"
                                                   :append-icon="passShow ? 'mdi-eye' : 'mdi-eye-off'"
                                                   :type="passShow ? 'text' : 'password'"
@@ -122,11 +180,55 @@
                             <v-divider></v-divider>
                             <v-row class="mx-4 mt-4 mb-2">
                                 <v-col class="py-0">
-                                    <v-btn block
-                                           class="accent lighten-2"
+                                    <v-dialog
+                                            v-model="dialog.add.on"
+                                            width="500"
                                     >
-                                        Add Dispatcher
-                                    </v-btn>
+                                        <template v-slot:activator="{}">
+                                            <v-btn block
+                                                   class="accent lighten-2"
+                                                   @click="fillAdmin()"
+                                            >
+                                                Add Admin
+                                            </v-btn>
+                                        </template>
+
+                                        <v-card class="primary pa-4">
+                                            <v-card-title>
+                                                Add Admin
+                                            </v-card-title>
+
+                                            <v-card-text>
+                                                {{dialog.add.text}}
+                                            </v-card-text>
+
+                                            <v-card-actions>
+                                                <v-row>
+                                                    <v-col>
+                                                        <v-btn class="error"
+                                                               text
+                                                               block
+                                                               @click="dialog.add.on = false"
+                                                        >
+                                                            I don't
+                                                        </v-btn>
+                                                    </v-col>
+                                                    <v-col>
+                                                        <v-btn class="secondary"
+                                                               text
+                                                               block
+                                                               @click="function(){
+                                                                   // submit();
+                                                                   dialog.add.on = false;
+                                                               }"
+                                                        >
+                                                            I do
+                                                        </v-btn>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
                                 </v-col>
                                 <v-col class="py-0">
                                     <v-btn block
@@ -149,7 +251,23 @@
     export default {
         name: "Admins",
         data: () => ({
-            dispatchers: [
+            dialog: {
+                remove:{
+                    text: '',
+                    on: false,
+                },
+                add:{
+                    text: '',
+                    on: false,
+                }
+            },
+            snackbar: {
+                text: '',
+                timeout: 5000,
+                on: false,
+                color: '',
+            },
+            admins: [
                 {
                     name: 'time Alan',
                     email: 'nothing@nada.com',
@@ -177,10 +295,44 @@
                 }
             ],
             passShow: false,
+            newAdmin: {
+                inputs: {
+                    email: false,
+                    password: false,
+                    firstName: false,
+                    lastName: false,
+                },
+                email: '',
+                password: '',
+                firstName: '',
+                lastName: ''
+            }
         }),
         methods: {
             reset() {
                 this.$refs.form.reset()
+            },
+
+            fillRemove(firstName) {
+                this.dialog.remove.text = 'Are you sure you want to remove ' + firstName + ' as an admin?';
+                this.dialog.remove.on = true
+            },
+
+            fillAdmin() {
+                const lName = this.newAdmin.lastName !== "";
+                const fName = this.newAdmin.firstName !== "";
+                const email = this.newAdmin.email !== "";
+                const password = this.newAdmin.password !== "";
+                if (lName && fName && email && password) {
+                    this.dialog.add.text = 'Are you sure you want to add ' + this.newAdmin.firstName + ' ' + this.newAdmin.lastName + ' as an admin?';
+                    this.dialog.add.on = true;
+                } else {
+                    this.newAdmin.inputs.lastName = !lName;
+                    this.newAdmin.inputs.firstName = !fName;
+                    this.newAdmin.inputs.email = !email;
+                    this.newAdmin.inputs.password = !password;
+
+                }
             }
         }
     }
