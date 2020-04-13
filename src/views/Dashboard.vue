@@ -8,6 +8,7 @@
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
                 user
+                <v-btn @click="logout"> Logout</v-btn>
             </v-card-title>
         </v-card>
         <v-row>
@@ -25,7 +26,8 @@
                         >
                             <v-icon large
                                     :color="card.iconColor"
-                            >{{card.icon}}</v-icon>
+                            >{{card.icon}}
+                            </v-icon>
                         </v-avatar>
                         <v-card-text class="body-2 pl-0 pb-0">
                             {{card.title}}
@@ -93,25 +95,25 @@
                     icon: 'mdi-map-marker-path',
                     iconColor: 'secondary',
                     backgroundColor: 'secondary lighten-4',
-                    statistics: [47,12,34,14,20],
+                    statistics: [47, 12, 34, 14, 20],
                 }, {
                     title: 'Buses Being Run',
                     icon: 'mdi-bus',
                     iconColor: 'warning',
                     backgroundColor: '',
-                    statistics: [47,12,34,14,20],
+                    statistics: [47, 12, 34, 14, 20],
                 }, {
                     title: 'Users Total',
                     icon: 'mdi-account-multiple',
                     iconColor: 'secondary',
                     backgroundColor: 'secondary lighten-4',
-                    statistics: [47,12,34,14,20],
+                    statistics: [47, 12, 34, 14, 20],
                 }, {
                     title: 'Users Today',
                     icon: 'mdi-account-multiple',
                     iconColor: 'warning',
                     backgroundColor: '',
-                    statistics: [47,12,34,14,20],
+                    statistics: [47, 12, 34, 14, 20],
                 }],
                 timeline: [
                     {
@@ -148,5 +150,10 @@
                 ]
             }
         },
-    };
+        methods: {
+            logout() {
+                this.$store.commit('changeToken', "")
+            }
+        }
+    }
 </script>
