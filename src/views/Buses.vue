@@ -196,9 +196,9 @@
                     });
             },
         },
-        beforeMount() {
-            this.reload()
-        }
+      beforeMount() {
+        this.reload()
+      }
 
     };
 

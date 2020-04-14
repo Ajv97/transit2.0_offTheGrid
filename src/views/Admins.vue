@@ -1,5 +1,13 @@
 <template>
     <div>
+        <v-snackbar v-model="snackbar.on"
+                    :timeout="snackbar.timeout"
+                    :color="snackbar.color"
+        >
+            <v-col class="ma-0 pa-0 text-center">
+                {{snackbar.text}}
+            </v-col>
+        </v-snackbar>
         <v-card class="primary mb-6"
                 elevation="10"
         >
@@ -218,7 +226,7 @@
                                                                text
                                                                block
                                                                @click="function(){
-                                                                   // submit();
+                                                                   submit();
                                                                    dialog.add.on = false;
                                                                }"
                                                         >
@@ -248,6 +256,9 @@
 </template>
 
 <script>
+    import {http} from "../components/httpComponent";
+    import {store} from "../store/store";
+
     export default {
         name: "Admins",
         data: () => ({
@@ -313,6 +324,24 @@
                 this.$refs.form.reset()
             },
 
+            submit() {
+                let admin = this.newAdmin;
+                http.post("users/registeradmin?email=" + admin.email
+                    + "&password=" + admin.password
+                    + "&firstname=" + admin.firstName
+                    + "&lastname=" + admin.lastName, {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                }).then(response => {
+                    if (response.status !== 200) {
+                        this.makeSnackbar('Failed to add admin', 'error');
+                    } else {
+                        this.makeSnackbar('Admin added', 'success');
+                    }
+                })
+            },
+
             fillRemove(firstName) {
                 this.dialog.remove.text = 'Are you sure you want to remove ' + firstName + ' as an admin?';
                 this.dialog.remove.on = true
@@ -333,7 +362,31 @@
                     this.newAdmin.inputs.password = !password;
 
                 }
-            }
+            },
+
+            makeSnackbar(text,color){
+                this.snackbar.text = text;
+                this.snackbar.color = color;
+                this.snackbar.on = true;
+            },
+
+            reload() {
+                http.get('/admins/allAdmins/', {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                })
+                    .then(response => {
+                        this.admins = response.data;
+                        console.log(this.admins)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+            },
+        },
+        beforeMount() {
+            this.reload()
         }
     }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="dispatchers">
+    <div id="dispatchers">
         <v-snackbar v-model="snackbar.on"
                     :timeout="snackbar.timeout"
                     :color="snackbar.color"
@@ -227,7 +227,7 @@
                                                                text
                                                                block
                                                                @click="function(){
-                                                                   // submit();
+                                                                   submit();
                                                                    dialog.add.on = false;
                                                                }"
                                                         >
@@ -257,17 +257,18 @@
 </template>
 
 <script>
-    // import {http} from "../components/httpComponent";
+    import {http} from "../components/httpComponent";
+    import {store} from "../store/store";
 
     export default {
         name: "Dispatchers",
         data: () => ({
             dialog: {
-                remove:{
+                remove: {
                     text: '',
                     on: false,
                 },
-                add:{
+                add: {
                     text: '',
                     on: false,
                 }
@@ -323,53 +324,24 @@
             reset() {
                 this.$refs.form.reset()
             },
-            // submit() {
-            //     http.post('users/registerdispatcher/', this.newDispatcher)
-            //         .then(response => {
-            //             if (response.status === 201) {
-            //                 this.snackbar.text = 'Dispatcher Successfully Created';
-            //                 this.snackbar.color = 'success';
-            //                 this.snackbar.on = true;
-            //                 this.newDispatcher.email = '';
-            //                 this.newDispatcher.password = '';
-            //                 this.newDispatcher.firstName = '';
-            //                 this.newDispatcher.lastName = '';
-            //             } else {
-            //                 this.snackbar.text = 'Dispatcher Creation Failed';
-            //                 this.snackbar.color = 'error';
-            //                 this.snackbar.on = true;
-            //             }
-            //         })
-            //         .catch(e => {
-            //             // eslint-disable-next-line no-console
-            //             console.log(e);
-            //             this.snackbar.text = 'not connected';
-            //             this.snackbar.color = 'secondary';
-            //             this.snackbar.on = true;
-            //         });
-            // },
 
-            // remove(email) {
-            //     http.delete('/admins/dispatcher/', email)
-            //         .then(response => {
-            //             if (response.status === 204) {
-            //                 this.snackbar.text = 'Dispatcher Successful Deleted';
-            //                 this.snackbar.color = 'success';
-            //                 this.snackbar.on = true;
-            //             } else {
-            //                 this.snackbar.text = 'Dispatcher Deletion Failed';
-            //                 this.snackbar.color = 'error';
-            //                 this.snackbar.on = true;
-            //             }
-            //         })
-            //         .catch(e => {
-            //             // eslint-disable-next-line no-console
-            //             console.log(e);
-            //             this.snackbar.text = 'not connected';
-            //             this.snackbar.color = 'secondary';
-            //             this.snackbar.on = true;
-            //         });
-            // },
+            submit() {
+                let dispatcher = this.newDispatcher;
+                http.post("users/registerdispatcher?email=" + dispatcher.email
+                    + "&password=" + dispatcher.password
+                    + "&firstname=" + dispatcher.firstName
+                    + "&lastname=" + dispatcher.lastName, {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                }).then(response => {
+                    if (response.status !== 200) {
+                        this.makeSnackbar('Failed to add dispatcher', 'error');
+                    } else {
+                        this.makeSnackbar('Dispatcher added', 'success');
+                    }
+                })
+            },
 
             fillRemove(firstName) {
                 this.dialog.remove.text = 'Are you sure you want to remove ' + firstName + ' as a dispatcher?';
@@ -389,9 +361,32 @@
                     this.newDispatcher.inputs.firstName = !fName;
                     this.newDispatcher.inputs.email = !email;
                     this.newDispatcher.inputs.password = !password;
-
                 }
-            }
+            },
+
+            makeSnackbar(text,color){
+                this.snackbar.text = text;
+                this.snackbar.color = color;
+                this.snackbar.on = true;
+            },
+
+            reload() {
+                http.get('/admins/allDispatchers/', {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                })
+                    .then(response => {
+                        this.dispatchers = response.data;
+                        console.log(this.dispatchers)
+                    })
+                    .catch(e => {
+                        console.log(e)
+                    })
+            },
+        },
+        beforeMount() {
+            this.reload()
         }
     }
 </script>
