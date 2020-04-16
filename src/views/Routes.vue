@@ -18,7 +18,7 @@
           <v-card-title>
             Active Routes
           </v-card-title>
-          <v-card class="primary lighten-2 pa-4 pb-2 ml-3"
+          <v-card class="accent pa-4 pb-2 ml-3"
                   elevation="7"
           >
             <v-card-title class="py-2">
@@ -78,7 +78,7 @@
           <v-card-title>
             Inactive Routes
           </v-card-title>
-          <v-card class="primary lighten-2  pa-4 pb-2 mr-3"
+          <v-card class="accent pa-4 pb-2 mr-3"
                   elevation="7"
           >
             <v-card-title class="py-2">

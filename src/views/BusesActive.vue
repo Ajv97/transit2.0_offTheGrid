@@ -18,7 +18,7 @@
           <v-card-title>
             Active Buses
           </v-card-title>
-          <v-card class="primary lighten-2 pa-4 pb-2 ml-3"
+          <v-card class="accent pa-4 pb-2 mx-3"
                   elevation="7"
           >
             <v-card-title class="py-2">
