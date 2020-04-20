@@ -9,6 +9,7 @@ import Routes from "../views/Routes.vue";
 import { store } from '../store/store'
 import RoutesActive from "../views/RoutesActive";
 import RoutesInactive from "../views/RoutesInactive";
+import Map from "../views/Map"
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,15 @@ const routes = [
             requiresAuth: true
         }
     },
+  {
+    path: "/map",
+    name: "Map",
+    component: Map,
+    meta: {
+      nav: true,
+      requiresAuth: true
+    }
+  },
     {
         path: "/buses/all",
         name: "Buses",
@@ -33,7 +43,7 @@ const routes = [
     },
     {
     path: "/buses/active",
-    name: "Buses",
+    name: "BusesActive",
     component: BusesActive,
     meta: {
       nav: true,
@@ -42,7 +52,7 @@ const routes = [
     },
   {
     path: "/buses/inactive",
-    name: "Buses",
+    name: "BusesInactive",
     component: BusesInactive,
     meta: {
       nav: true,
@@ -70,7 +80,7 @@ const routes = [
     },
   {
     path: "/routes/active",
-    name: "Routes",
+    name: "RoutesActive",
     component: RoutesActive,
     meta: {
       nav: true,
@@ -79,7 +89,7 @@ const routes = [
   },
   {
     path: "/routes/inactive",
-    name: "Routes",
+    name: "RoutesInactive",
     component: RoutesInactive,
     meta: {
       nav: true,
