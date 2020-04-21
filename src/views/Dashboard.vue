@@ -7,7 +7,8 @@
                 Dashboard
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
-                user <v-btn @click="logout"> Logout </v-btn>
+                user
+                <v-btn @click="logout"> Logout</v-btn>
             </v-card-title>
         </v-card>
         <v-row>
@@ -59,6 +60,9 @@
                     <v-card-title>
                         Active Routes and Buses
                     </v-card-title>
+                    <div>
+                        <div style="width: 100%; height: 500px" id="mapContainer"></div>
+                    </div>
                 </v-card>
             </v-col>
         </v-row>
@@ -66,6 +70,8 @@
 </template>
 
 <script>
+    let H = window.H;
+
     // @ is an alias to /src
     export default {
         name: "Dashboard",
@@ -121,10 +127,35 @@
                         icon: '',
                         color: 'secondary'
                     }
-                ]
+                ],
+                platform: null,
+                map: null,
+                lat: 42.588081,
+                lng: -87.822899
             }
         },
-        methods:{
+        mounted: function () {
+            // Initialize the platform object:
+            var platform = new H.service.Platform({
+                'apikey': process.env.VUE_APP_HERE_APP_KEY,
+                'appid': process.env.VUE_APP_HERE_APP_ID,
+                'useHTTPS': true
+            });
+
+            // Obtain the default map types from the platform object
+            var maptypes = platform.createDefaultLayers();
+
+            // Instantiate (and display) a map object:
+            //var map =
+            new H.Map(
+                document.getElementById('mapContainer'),
+                maptypes.vector.normal.map,
+                {
+                    zoom: 10,
+                    center: {lng: this.lng, lat: this.lat}
+                });
+        },
+        methods: {
             logout() {
                 this.$store.commit('changeToken', "")
             }

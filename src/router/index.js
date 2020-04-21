@@ -9,7 +9,6 @@ import Routes from "../views/Routes.vue";
 import { store } from '../store/store'
 import RoutesActive from "../views/RoutesActive";
 import RoutesInactive from "../views/RoutesInactive";
-import Map from "../views/Map"
 
 Vue.use(VueRouter);
 
@@ -23,15 +22,6 @@ const routes = [
             requiresAuth: true
         }
     },
-  {
-    path: "/map",
-    name: "Map",
-    component: Map,
-    meta: {
-      nav: true,
-      requiresAuth: true
-    }
-  },
     {
         path: "/buses/all",
         name: "Buses",
