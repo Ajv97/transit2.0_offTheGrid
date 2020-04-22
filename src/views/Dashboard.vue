@@ -1,75 +1,78 @@
 <template>
-    <div class="dashboard">
-        <v-card class="primary mb-3"
+  <div class="dashboard">
+    <v-card class="primary mb-3"
+            elevation="10"
+    >
+      <v-card-title class="d-inline-block">
+        Dashboard
+      </v-card-title>
+      <v-card-title class="d-inline-block float-right">
+        user
+        <v-btn @click="logout"> Logout</v-btn>
+      </v-card-title>
+    </v-card>
+    <v-row>
+      <v-col v-for="card in cards"
+             :key="card.title"
+             cols="3"
+      >
+        <v-card class="primary"
+                height="200px"
                 elevation="10"
         >
-            <v-card-title class="d-inline-block">
-                Dashboard
-            </v-card-title>
-            <v-card-title class="d-inline-block float-right">
-                user
-                <v-btn @click="logout"> Logout</v-btn>
-            </v-card-title>
+          <v-card-title>
+            {{card.title}}
+          </v-card-title>
         </v-card>
-        <v-row>
-            <v-col v-for="card in cards"
-                   :key="card.title"
-                   cols="3"
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="4">
+        <v-card class="primary"
+                elevation="10"
+        >
+          <v-card-title>
+            Activity Timeline
+          </v-card-title>
+          <v-timeline dense
+                      clipped
+                      class="pa-0"
+          >
+            <v-timeline-item v-for="(item,i) in timeline"
+                             :key="i"
+                             :icon="item.icon"
+                             :color="item.color"
+                             class="pa-0 mx-0 my-1 "
             >
-                <v-card class="primary"
-                        height="200px"
-                        elevation="10"
-                >
-                    <v-card-title>
-                        {{card.title}}
-                    </v-card-title>
-                </v-card>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="4">
-                <v-card class="primary"
-                        elevation="10"
-                >
-                    <v-card-title>
-                        Activity Timeline
-                    </v-card-title>
-                    <v-timeline dense
-                                clipped
-                                class="pa-0"
-                    >
-                        <v-timeline-item v-for="(item,i) in timeline"
-                                         :key="i"
-                                         :icon="item.icon"
-                                         :color="item.color"
-                                         class="pa-0 mx-0 my-1 "
-                        >
-                            <p class="my-1 mr-2">
-                                <b>{{ item.title }}</b><br/>
-                                {{ item.text }}<br/>
-                                {{ item.time }} ago
-                            </p>
-                        </v-timeline-item>
-                    </v-timeline>
-                </v-card>
-            </v-col>
-            <v-col cols="8">
-                <v-card class="primary"
-                        elevation="10"
-                >
-                    <v-card-title>
-                        Active Routes and Buses
-                    </v-card-title>
-                    <div>
-                        <div style="width: 100%; height: 500px" id="mapContainer"></div>
-                    </div>
-                </v-card>
-            </v-col>
-        </v-row>
-    </div>
+              <p class="my-1 mr-2">
+                <b>{{ item.title }}</b><br/>
+                {{ item.text }}<br/>
+                {{ item.time }} ago
+              </p>
+            </v-timeline-item>
+          </v-timeline>
+        </v-card>
+      </v-col>
+      <v-col cols="8">
+        <v-card class="primary"
+                elevation="10"
+        >
+          <v-card-title>
+            Active Routes and Buses
+          </v-card-title>
+          <div>
+            <div style="width: 100%; height: 500px" id="mapContainer"></div>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
+    import {http} from "../components/httpComponent";
+    import {store} from "../store/store"
+
     let H = window.H;
 
     // @ is an alias to /src
@@ -131,7 +134,10 @@
                 platform: null,
                 map: null,
                 lat: 42.588081,
-                lng: -87.822899
+                lng: -87.822899,
+                buses: [],
+                routes: [],
+                routesPoints: []
             }
         },
         mounted: function () {
@@ -158,7 +164,67 @@
         methods: {
             logout() {
                 this.$store.commit('changeToken', "")
+            },
+            async getRoutes() {
+                let localRoutes, routesPoints = [];
+                await http.get('/routes/', {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                })
+                    .then(response => {
+                        this.routes = response.data;
+                        localRoutes = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                await localRoutes.forEach(async route => {
+                    await http.get('/gtfsroutelocationdataroutes/id/',{
+                        headers: {
+                            "authorization": store.getters.token,
+                            "trip_id": route.trip_ID
+                        }
+                    })
+                        .then(response => {
+                            this.routesPoints.push(response.data);
+                            routesPoints.push(response.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                });
+                console.log(routesPoints);
+                for(let i = 0; i < routesPoints.length; i++){
+                    let route = routesPoints[i];
+                    for(let j = 0; j < route.length; j++){
+                        console.log(route[j]);
+                    }
+                }
+                 // await routesPoints.forEach(route => {
+                 //    route.forEach(location => {
+                 //        console.log(location)
+                 //    })
+                // });
+            },
+            getBuses() {
+                http.get('/buses/', {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                })
+                    .then(response => {
+                        this.buses = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
             }
+
+        },
+        beforeMount() {
+            this.getRoutes();
+            this.getBuses();
         }
     }
 </script>

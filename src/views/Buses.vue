@@ -63,6 +63,7 @@
                          cols="4"
                   >
                     <v-select
+                      class="text-center pa-0"
                       v-model = "bus.status"
                       :items="items"
                       label="Status"

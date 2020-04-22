@@ -123,6 +123,7 @@
                          cols="4"
                   >
                     <v-select
+                      class="text-center pa-0"
                       v-model = "routes.bus_ID"
                       :items="items"
                       label="Bus #"

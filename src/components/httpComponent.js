@@ -10,7 +10,7 @@ export const http = axios.create({
 
 http.interceptors.request.use(request => {
   // eslint-disable-next-line no-console
-  console.log(request);
+  //console.log(request);
   return request;
 });
 
