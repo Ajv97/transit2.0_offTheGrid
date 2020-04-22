@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
@@ -12,10 +12,10 @@ export const store = new Vuex.Store({
   },
   mutations: {
     changeAdmin(state, admin) {
-      state.admin = admin
+      state.admin = admin;
     },
     changeToken(state, token) {
-      state.token = token
+      state.token = token;
     }
   },
   getters: {
