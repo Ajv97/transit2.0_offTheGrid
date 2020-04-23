@@ -38,10 +38,10 @@
             >
               <v-card-title class="py-2">
                 <v-row>
-                  <v-col class="text-center pa-0" cols="3">
+                  <v-col class="text-center pa-0 my-2" cols="3">
                     {{ bus.bus_ID }}
                   </v-col>
-                  <v-col class="text-center pa-0" cols="5">
+                  <v-col class="text-center pa-0 my-2" cols="5">
                     {{ bus.gps_ID }}
                   </v-col>
                   <v-col class="text-center pa-0" cols="4">

@@ -134,7 +134,8 @@
                 lng: -87.822899,
                 buses: [],
                 routes: [],
-                routesPoints: []
+                routesPoints: [],
+                routesColors: []
             };
         },
         mounted: function () {
@@ -158,15 +159,6 @@
                     center: {lng: this.lng, lat: this.lat}
                 }
             );
-
-            /*let mapEvents = new H.mapevents.MapEvents(map);
-
-            window.addEventListener("tap", function(evt) {
-              // Log 'tap' and 'mouse' events:
-              console.log(evt.type, evt.currentPointer.type);
-            });
-
-            new H.mapevents.Behavior(mapEvents);*/
 
             window.addEventListener("resize", () => map.getViewPort().resize());
 
@@ -196,6 +188,22 @@
                     await sleep(100);
                 }
 
+                await this.routes.forEach(async route => {
+                    await http
+                        .get("/gtfsroutesroutes/", {
+                            headers: {
+                                authorization: store.getters.token,
+                                route_id: route.route_ID
+                            }
+                        })
+                        .then(response => {
+                            this.routesColors.push(response.data);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                });
+
                 awaitRoutes = this.routes.length;
 
                 await this.routes.forEach(async route => {
@@ -222,6 +230,7 @@
                 await this.routesPoints.forEach(async route => {
                     let polyline = new H.geo.LineString();
 
+                    //polyline.color = this.routesColors.route_color;
                     await route.forEach(location => {
                         polyline.pushPoint({
                             lat: location.stop_lat,
