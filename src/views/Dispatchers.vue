@@ -15,7 +15,10 @@
                 Dispatchers
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
-                user
+                {{firstname}}
+                <v-btn @click="logout"
+                       class="accent ml-4"
+                > Logout</v-btn>
             </v-card-title>
         </v-card>
         <v-card class="primary float-none pa-2"
@@ -263,6 +266,7 @@
     export default {
         name: "Dispatchers",
         data: () => ({
+            firstname: '',
             dialog: {
                 remove: {
                     text: '',
@@ -364,13 +368,19 @@
                 }
             },
 
-            makeSnackbar(text,color){
+            makeSnackbar(text, color) {
                 this.snackbar.text = text;
                 this.snackbar.color = color;
                 this.snackbar.on = true;
             },
 
+            logout() {
+                this.$store.commit('changeToken', "");
+                this.$router.go(0);
+            },
+
             reload() {
+                this.firstname = store.getters.firstname;
                 http.get('/admins/allDispatchers/', {
                     headers: {
                         "authorization": store.getters.token

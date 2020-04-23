@@ -66,10 +66,12 @@
                 this.submitDisabled = true;
                 await http.post("users/login?email=" + this.credentials.email + "&password=" + this.credentials.password)
                     .then(response => {
+                        console.log(response.data);
                         if (response.data.role !== "ROLE_USER") {
                             let admin = (response.data.role === "ROLE_ADMIN");
                             this.$store.commit('changeAdmin', admin);
                             this.$store.commit('changeToken', response.data.accessToken);
+                            this.$store.commit('changeFirstname', response.data.firstname);
                             window.location = "#/";
                             this.submitDisabled = false;
                         }

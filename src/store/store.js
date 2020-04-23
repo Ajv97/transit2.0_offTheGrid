@@ -8,7 +8,8 @@ export const store = new Vuex.Store({
   plugins: [createPersistedState()],
   state: {
     admin: false,
-    token: ""
+    token: "",
+    firstname: "test1"
   },
   mutations: {
     changeAdmin(state, admin) {
@@ -16,10 +17,14 @@ export const store = new Vuex.Store({
     },
     changeToken(state, token) {
       state.token = token
+    },
+    changeFirstname(state, firstname){
+      state.firstname = firstname
     }
   },
   getters: {
     admin: state => state.admin,
-    token: state => state.token
+    token: state => state.token,
+    firstname: state => state.firstname
   }
 });

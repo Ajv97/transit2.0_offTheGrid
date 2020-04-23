@@ -7,8 +7,10 @@
                 Dashboard
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
-                user
-                <v-btn @click="logout"> Logout</v-btn>
+                {{firstname}}
+                <v-btn @click="logout"
+                       class="accent ml-4"
+                > Logout</v-btn>
             </v-card-title>
         </v-card>
         <v-row>
@@ -17,28 +19,23 @@
                    cols="3"
             >
                 <v-card class="primary"
-                        height="300px"
                         elevation="10"
                 >
-                    <v-row class="pa-8 pb-0 ma-0">
+                    <v-row class="pa-8 ma-0">
                         <v-avatar :color="'background'+card.iconColor"
                                   size="72"
+                                  class="d-inline-block"
                         >
                             <v-icon large
                                     :color="card.iconColor"
                             >{{card.icon}}
                             </v-icon>
                         </v-avatar>
-                        <v-card-text class="body-2 pl-0 pb-0">
+                        <v-card-title class="pa-0 pl-8">
+                            {{card.value}}
                             {{card.title}}
-                        </v-card-text>
+                        </v-card-title>
                     </v-row>
-                    <v-sparkline color="success"
-                                 :value="card.statistics"
-                                 line-width="2"
-                                 auto-draw
-                                 stroke-linecap="round"
-                    ></v-sparkline>
                 </v-card>
             </v-col>
         </v-row>
@@ -84,37 +81,32 @@
 </template>
 
 <script>
+    import {store} from "../store/store"
     // @ is an alias to /src
     export default {
         name: "Dashboard",
         components: {},
         data() {
             return {
-                cards: [{
-                    title: 'Routes Being Run',
-                    icon: 'mdi-map-marker-path',
-                    iconColor: 'secondary',
-                    backgroundColor: 'secondary lighten-4',
-                    statistics: [47, 12, 34, 14, 20],
-                }, {
-                    title: 'Buses Being Run',
-                    icon: 'mdi-bus',
-                    iconColor: 'warning',
-                    backgroundColor: '',
-                    statistics: [47, 12, 34, 14, 20],
-                }, {
-                    title: 'Users Total',
-                    icon: 'mdi-account-multiple',
-                    iconColor: 'secondary',
-                    backgroundColor: 'secondary lighten-4',
-                    statistics: [47, 12, 34, 14, 20],
-                }, {
-                    title: 'Users Today',
-                    icon: 'mdi-account-multiple',
-                    iconColor: 'warning',
-                    backgroundColor: '',
-                    statistics: [47, 12, 34, 14, 20],
-                }],
+                firstname: '',
+                cards:
+                    [{
+                        title: 'Routes Being Run',
+                        icon: 'mdi-map-marker-path',
+                        iconColor: 'secondary',
+                    }, {
+                        title: 'Buses Being Run',
+                        icon: 'mdi-bus',
+                        iconColor: 'warning',
+                    }, {
+                        title: 'Users Total',
+                        icon: 'mdi-account-multiple',
+                        iconColor: 'secondary',
+                    }, {
+                        title: 'Users Today',
+                        icon: 'mdi-account-multiple',
+                        iconColor: 'warning',
+                    }],
                 timeline: [
                     {
                         title: 'New Dispatcher',
@@ -152,8 +144,16 @@
         },
         methods: {
             logout() {
-                this.$store.commit('changeToken', "")
+                this.$store.commit('changeToken', "");
+                this.$router.go(0);
+            },
+
+            reload() {
+                this.firstname = store.getters.firstname;
             }
+        },
+        beforeMount() {
+            this.reload();
         }
     }
 </script>
