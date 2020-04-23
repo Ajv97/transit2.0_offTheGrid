@@ -4,7 +4,7 @@
                 elevation="10"
         >
             <v-card-title class="d-inline-block">
-                Buses
+                Inactive Buses
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
                 {{firstname}}
