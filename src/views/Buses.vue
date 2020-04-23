@@ -184,11 +184,10 @@
                                 } else {
                                     element.status = "Active"
                                 }
-
                             }
                         });
                     }
-                })
+                });
             },
 
             logout() {
@@ -217,7 +216,4 @@
         }
 
     };
-
-
 </script>
-

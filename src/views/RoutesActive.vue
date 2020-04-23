@@ -152,10 +152,6 @@
             this.reload()
         }
     }
-
-
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

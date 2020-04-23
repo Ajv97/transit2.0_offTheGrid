@@ -1,5 +1,4 @@
 <template>
-
     <v-content id="app" fill-height>
         <v-layout row wrap>
             <v-flex/>
@@ -12,7 +11,6 @@
                         </v-toolbar>
                         <v-card-text>
                             <v-form>
-
                                 <v-text-field
                                         label="Email"
                                         name="login"
@@ -29,13 +27,17 @@
                                         required
                                         v-on:keydown.enter.once="submit"
                                 />
-
                             </v-form>
                         </v-card-text>
                         <v-card-actions>
                             <div class="flex-grow-1"></div>
-                            <v-btn style="background-color: #00ff00" class="primary my-2" @click="submit()"
-                                   :disabled="submitDisabled" :loading="submitDisabled">Login
+                            <v-btn
+                                    style="background-color: #00ff00"
+                                    class="primary my-2"
+                                    @click="submit()"
+                                    :disabled="submitDisabled"
+                                    :loading="submitDisabled"
+                            >Login
                             </v-btn>
                         </v-card-actions>
                     </v-card>
@@ -81,7 +83,7 @@
                     })
             }
         }
-    }
+    };
 </script>
 
 <style scoped>
@@ -101,5 +103,4 @@
         background-size: cover;
         background-position: center;
     }
-
 </style>

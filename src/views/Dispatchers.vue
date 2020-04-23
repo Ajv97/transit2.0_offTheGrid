@@ -18,7 +18,8 @@
                 {{firstname}}
                 <v-btn @click="logout"
                        class="accent ml-4"
-                > Logout</v-btn>
+                > Logout
+                </v-btn>
             </v-card-title>
         </v-card>
         <v-card class="primary float-none pa-2"
@@ -254,6 +255,11 @@
                         </v-form>
                     </v-card>
                 </v-col>
+                <v-col class="py-0">
+                    <v-btn error @click="reset">
+                        Clear
+                    </v-btn>
+                </v-col>
             </v-row>
         </v-card>
     </div>
@@ -401,6 +407,4 @@
     }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
