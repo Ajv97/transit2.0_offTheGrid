@@ -204,7 +204,7 @@
 
             async recenterMap() {
                 this.center = {lat: 42.5972, lng: -87.8961};
-                await sleep(100)
+                await sleep(50)
                 this.center = this.center_recenter;
             },
 
@@ -308,14 +308,14 @@
             },
 
             getBuses() {
-                console.log(new Date())
-                http
-                    .get("/buses/", {
+
+                http.get("/buses/", {
                         headers: {
                             authorization: store.getters.token
                         }
                     })
                     .then(response => {
+                        this.buses = [];
                         response.data.forEach(bus => {
                             if (bus.status === "Active") {
                                 bus.location.lat = Number.parseFloat(bus.location.latitude)
@@ -334,11 +334,13 @@
             //this.getBuses();
             this.reload();
         },
-        mounted() {
-            // get bus info every 15 seconds
-            let job = new CronJob('*/15 * * * * *', this.getBuses(), null, true, 'America/Chicago');
-            job.start()
-        }
+        created() {
+            this.job = new CronJob('*/15 * * * * *', this.getBuses(), null, true, 'America/Chicago');
+            this.job.start();
+        },
+        beforeDestroy() {
+            this.job.stop()
+        },
     };
 
     const sleep = milliseconds => {
