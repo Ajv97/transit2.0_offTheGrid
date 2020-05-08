@@ -127,7 +127,7 @@ router.beforeEach((to, from, next) => {
   let admin = store.getters.admin;
   let token = store.getters.token;
   // when route requires auth and there's no current user, redirect to '/login'
-  console.log(requiresAuth, " ", token);
+  //console.log(requiresAuth, " ", token);
   if (requiresAuth && !token) {
     next("/login");
     // when we go to login route and are already logged in, we can skip this page
