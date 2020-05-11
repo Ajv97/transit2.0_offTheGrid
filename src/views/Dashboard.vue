@@ -285,6 +285,7 @@
                         }
                     })
                         .then(async response => {
+                            console.log()
                             if (response.status === 200) {
                                 let correctedLocation = [];
                                 await response.data.forEach(location => {
@@ -308,7 +309,6 @@
             },
 
             getBuses() {
-
                 http.get("/buses/", {
                         headers: {
                             authorization: store.getters.token
