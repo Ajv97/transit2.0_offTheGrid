@@ -71,7 +71,9 @@
                                                 :items="items"
                                                 label="Status"
                                                 outlined
+                                                dense
                                                 @input="submit(bus.id)"
+                                                class="mb-n7"
                                         ></v-select>
                                     </v-col>
                                 </v-row>

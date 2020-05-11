@@ -32,6 +32,7 @@
                                    @click.stop="item.show=!item.show"
                 >
                     <v-expansion-panel-header class="py-2 px-4"
+                                              v-if="!item.admin || item.admin == adminRights"
                     >
                         <v-list-item-title class="body-1">{{item.title}}</v-list-item-title>
                     </v-expansion-panel-header>
@@ -48,7 +49,8 @@
                                 <v-list-item-icon class="mr-2">
                                     <v-icon medium
                                             :color="child.iconColor"
-                                    >{{child.icon}}</v-icon>
+                                    >{{child.icon}}
+                                    </v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-content>
                                     <v-list-item-title class="body-2">{{child.title}}</v-list-item-title>
@@ -72,14 +74,17 @@
 <script>
 
     // import Vuetify from "vuetify";
+    import {store} from "./store/store";
 
     export default {
         data: () => ({
             drawer: true,
+            adminRights: true,
             items: [
                 {
                     title: 'Users',
                     show: false,
+                    admin: true,
                     children: [
                         {
                             href: '/#/dispatchers',
@@ -95,6 +100,7 @@
                 }, {
                     title: 'Buses',
                     show: false,
+                    admin: false,
                     children: [
                         {
                             href: '/#/buses/all',
@@ -115,6 +121,7 @@
                 }, {
                     title: 'Routes',
                     show: false,
+                    admin: false,
                     children: [
                         {
                             href: '/#/routes/all',
@@ -134,7 +141,16 @@
                         }]
                 }
             ]
-        })
+        }),
+        methods: {
+            reload() {
+                this.adminRights = store.getters.admin;
+                console.log("admin rights = " + this.adminRights);
+            }
+        },
+        beforeMount() {
+            this.reload();
+        }
     }
     ;
 </script>

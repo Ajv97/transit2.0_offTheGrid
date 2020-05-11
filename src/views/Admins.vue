@@ -15,7 +15,7 @@
                 Admins
             </v-card-title>
             <v-card-title class="d-inline-block float-right">
-                {{firstname}}
+                {{firstname}} {{lastname}}
                 <v-btn @click="logout"
                        class="accent ml-4"
                 > Logout</v-btn>
@@ -62,7 +62,7 @@
                                     <v-col class="text-center pa-0"
                                            cols="3"
                                     >
-                                        {{ admin.name }}
+                                        {{admin.firstname}} {{admin.lastname}}
                                     </v-col>
                                     <v-col class="text-center pa-0"
                                            cols="5"
@@ -282,33 +282,7 @@
                 on: false,
                 color: '',
             },
-            admins: [
-                {
-                    name: 'time Alan',
-                    email: 'nothing@nada.com',
-                    id: '1'
-                },
-                {
-                    name: 'time Alan',
-                    email: 'nothing@nada.com',
-                    id: '2'
-                },
-                {
-                    name: 'time Alan',
-                    email: 'nothing@nada.com',
-                    id: '3'
-                },
-                {
-                    name: 'time Alan',
-                    email: 'nothing@nada.com',
-                    id: '4'
-                },
-                {
-                    name: 'time Alan',
-                    email: 'nothing@nada.com',
-                    id: '5'
-                }
-            ],
+            admins: [],
             passShow: false,
             newAdmin: {
                 inputs: {
@@ -342,6 +316,20 @@
                         this.makeSnackbar('Failed to add admin', 'error');
                     } else {
                         this.makeSnackbar('Admin added', 'success');
+                    }
+                })
+            },
+
+            remove() {
+                http.delete("/admins/admin/" + this.dialog.remove.email, {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                }).then(response => {
+                    if (response.status !== 200) {
+                        this.makeSnackbar('Failed to remove dispatcher', 'error');
+                    } else {
+                        this.makeSnackbar('Dispatcher removed', 'success');
                     }
                 })
             },
@@ -381,7 +369,7 @@
 
             reload() {
                 this.firstname = store.getters.firstname;
-                http.get('/admins/allAdmins/', {
+                http.get('/admins', {
                     headers: {
                         "authorization": store.getters.token
                     }

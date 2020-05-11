@@ -73,7 +73,7 @@
                             let admin = (response.data.role === "ROLE_ADMIN");
                             this.$store.commit('changeAdmin', admin);
                             this.$store.commit('changeToken', response.data.accessToken);
-                            this.$store.commit('changeFirstname', response.data.firstname);
+                            this.$store.commit('changeFirstname', response.data.firstname + " " + response.data.lastname);
                             window.location = "#/";
                             this.submitDisabled = false;
                         }
