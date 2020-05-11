@@ -14,7 +14,7 @@
         <v-row>
             <v-col v-for="card in cards"
                    :key="card.title"
-                   cols="3"
+                   cols="4"
             >
                 <v-card class="primary"
                         elevation="10"
@@ -30,8 +30,9 @@
                             </v-icon>
                         </v-avatar>
                         <v-card-title class="pa-0 pl-8">
-                            {{card.value}}
                             {{card.title}}
+                            <br>
+                            {{card.dataNumer}} out of {{card.dataDenom}}
                         </v-card-title>
                     </v-row>
 
@@ -100,18 +101,20 @@
                         title: 'Routes Being Run',
                         icon: 'mdi-map-marker-path',
                         iconColor: 'secondary',
+                        dataNumer: 0,
+                        dataDenom: 0,
                     }, {
                         title: 'Buses Being Run',
                         icon: 'mdi-bus',
                         iconColor: 'warning',
-                    }, {
-                        title: 'Users Total',
-                        icon: 'mdi-account-multiple',
-                        iconColor: 'secondary',
+                        dataNumer: 0,
+                        dataDenom: 0,
                     }, {
                         title: 'Users Today',
                         icon: 'mdi-account-multiple',
-                        iconColor: 'warning',
+                        iconColor: 'secondary',
+                        dataNumer: 0,
+                        dataDenom: 0,
                     }],
                 timeline: [
                     {
@@ -203,6 +206,14 @@
                     })
                     .then(response => {
                         this.routes = response.data;
+                        this.cards[0].dataDenom = this.routes.length;
+                        let active = 0;
+                        for(let i = 0; i< this.routes.length; i++){
+                            if(this.routes[i].bus_ID){
+                                active += 1;
+                            }
+                        };
+                        this.cards[0].dataNumer = active;
                     })
                     .catch(e => {
                         console.log(e);
@@ -277,6 +288,14 @@
                     })
                     .then(response => {
                         this.buses = response.data;
+                        this.cards[1].dataDenom = this.buses.length;
+                        let active = 0;
+                        for(let i = 0; i< this.buses.length; i++){
+                            if(this.buses[i].status === 'Active'){
+                                active += 1;
+                            }
+                        };
+                        this.cards[1].dataNumer = active;
                     })
                     .catch(e => {
                         console.log(e);

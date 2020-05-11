@@ -71,6 +71,8 @@
                                                 :items="items"
                                                 label="Bus #"
                                                 outlined
+                                                dense
+                                                class="mb-n7"
                                         ></v-select>
                                     </v-col>
                                 </v-row>

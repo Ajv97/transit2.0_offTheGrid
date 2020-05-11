@@ -63,7 +63,7 @@
                                     <v-col class="text-center pa-0"
                                            cols="3"
                                     >
-                                        {{ dispatch.name }}
+                                        {{dispatch.firstname}} {{dispatch.lastname}}
                                     </v-col>
                                     <v-col class="text-center pa-0"
                                            cols="5"
@@ -76,7 +76,7 @@
                                         <v-btn class="error"
                                                elevation="3"
                                                v-on="on"
-                                               @click="fillRemove(dispatch.name)"
+                                               @click="fillRemove(dispatch.name,dispatch.email)"
                                         >
                                             Delete
                                         </v-btn>
@@ -112,7 +112,10 @@
                                             <v-btn class="error"
                                                    text
                                                    block
-                                                   @click="dialog.remove.on = false"
+                                                   @click="function(){
+                                                       remove(dialog.remove.email);
+                                                       dialog.remove.on = false;
+                                                   }"
                                             >
                                                 I do
                                             </v-btn>
@@ -255,11 +258,6 @@
                         </v-form>
                     </v-card>
                 </v-col>
-                <v-col class="py-0">
-                    <v-btn error @click="reset">
-                        Clear
-                    </v-btn>
-                </v-col>
             </v-row>
         </v-card>
     </div>
@@ -277,6 +275,7 @@
                 remove: {
                     text: '',
                     on: false,
+                    email: '',
                 },
                 add: {
                     text: '',
@@ -350,12 +349,30 @@
                     } else {
                         this.makeSnackbar('Dispatcher added', 'success');
                     }
-                })
+                });
+                this.reload();
             },
 
-            fillRemove(firstName) {
+            remove() {
+                console.log(this.dialog.remove.email);
+                http.delete("dispatchers/" + this.dialog.remove.email, {
+                    headers: {
+                        "authorization": store.getters.token
+                    }
+                }).then(response => {
+                    if (response.status !== 200) {
+                        this.makeSnackbar('Failed to remove dispatcher', 'error');
+                    } else {
+                        this.makeSnackbar('Dispatcher removed', 'success');
+                    }
+                });
+                this.reload();
+            },
+
+            fillRemove(firstName, email) {
                 this.dialog.remove.text = 'Are you sure you want to remove ' + firstName + ' as a dispatcher?';
-                this.dialog.remove.on = true
+                this.dialog.remove.on = true;
+                this.dialog.remove.email = email;
             },
 
             fillDispatch() {
@@ -387,7 +404,7 @@
 
             reload() {
                 this.firstname = store.getters.firstname;
-                http.get('/admins/allDispatchers/', {
+                http.get('/dispatchers', {
                     headers: {
                         "authorization": store.getters.token
                     }
@@ -400,7 +417,8 @@
                         console.log(e)
                     })
             },
-        },
+        }
+        ,
         beforeMount() {
             this.reload()
         }
