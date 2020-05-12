@@ -145,7 +145,7 @@
         methods: {
             reload() {
                 this.adminRights = store.getters.admin;
-                console.log("admin rights = " + this.adminRights);
+                //console.log("admin rights = " + this.adminRights);
             }
         },
         beforeMount() {

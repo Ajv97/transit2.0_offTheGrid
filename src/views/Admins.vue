@@ -376,7 +376,7 @@
                 })
                     .then(response => {
                         this.admins = response.data;
-                        console.log(this.admins)
+                        //console.log(this.admins)
                     })
                     .catch(e => {
                         console.log(e)

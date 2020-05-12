@@ -116,7 +116,6 @@
 <script>
     import {http} from "../components/httpComponent";
     import {store} from "../store/store";
-    import {CronJob} from 'cron'
 
     // @ is an alias to /src
     export default {
@@ -192,7 +191,9 @@
                 infoOpened: false,
                 infoContent: null,
                 currentPlace: null,
-                infoOptions: null
+                infoOptions: null,
+                job: null,
+                run: true
             };
         },
 
@@ -259,7 +260,7 @@
                             if(this.routes[i].bus_ID){
                                 active += 1;
                             }
-                        };
+                        }
                         this.cards[0].dataNumer = active;
                     })
                     .catch(e => {
@@ -297,7 +298,6 @@
                         }
                     })
                         .then(async response => {
-                            console.log()
                             if (response.status === 200) {
                                 let correctedLocation = [];
                                 await response.data.forEach(location => {
@@ -321,6 +321,7 @@
             },
 
             getBuses() {
+                console.log(new Date())
                 http.get("/buses/", {
                         headers: {
                             authorization: store.getters.token
@@ -341,26 +342,30 @@
                             if(this.buses[i].status === 'Active'){
                                 active += 1;
                             }
-                        };
+                        }
                         this.cards[1].dataNumer = active;
                     })
                     .catch(e => {
                         console.log(e);
                     });
+            },
+
+            async getBusesInfinite(){
+                while (this.run){
+                    this.getBuses();
+                    await sleep(15000)
+                }
             }
         },
         beforeMount() {
             this.getRoutes();
-            //this.getBuses();
             this.reload();
+            this.getBusesInfinite()
         },
-        created() {
-            this.job = new CronJob('*/15 * * * * *', this.getBuses(), null, true, 'America/Chicago');
-            this.job.start();
-        },
+
         beforeDestroy() {
-            this.job.stop()
-        },
+            this.run = false
+        }
     };
 
     const sleep = milliseconds => {

@@ -354,7 +354,7 @@
             },
 
             remove() {
-                console.log(this.dialog.remove.email);
+                //console.log(this.dialog.remove.email);
                 http.delete("dispatchers/" + this.dialog.remove.email, {
                     headers: {
                         "authorization": store.getters.token
@@ -411,7 +411,7 @@
                 })
                     .then(response => {
                         this.dispatchers = response.data;
-                        console.log(this.dispatchers)
+                        //console.log(this.dispatchers)
                     })
                     .catch(e => {
                         console.log(e)
